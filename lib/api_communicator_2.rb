@@ -21,21 +21,23 @@ def char_films_info(character)
   # all_characters = RestClient.get()
   # character_hash = JSON.parse(all_characters)
   char_info_hash = {}
-  if all_char_hash.find {|char_info| char_info["name"].downcase == character}
-    char_info_hash = all_char_hash.find {|char_info| char_info["name"].downcase == character}
+  if all_char_hash["results"].find {|char_info| char_info["name"].downcase == character}
+    char_info_hash = all_char_hash["results"].find {|char_info| char_info["name"].downcase == character}
   # else
   end
   char_info_hash
 end
 
 def all_char_hash
-  all_char_hash = []
+  all_char_hash = {}
   for n in 1..9
     all_characters = RestClient.get("http://www.swapi.co/api/people/?page=#{n}")
     character_hash = JSON.parse(all_characters)
-    all_char_hash << character_hash["results"]
+    binding.pry
+    all_char_hash = all_char_hash.merge(character_hash)
   end
-  all_char_hash.flatten
+  # binding.pry
+  all_char_hash
 end
 
 
