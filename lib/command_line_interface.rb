@@ -1,6 +1,6 @@
 def welcome
   # puts out a welcome message here!
-  puts "Hello, tell me your favorite Star Wars character"
+  puts "Hello! Who is your favorite Star Wars character?"
 end
 
 def get_character_from_user
