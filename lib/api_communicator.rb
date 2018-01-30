@@ -15,6 +15,16 @@ def get_character_movies_from_api(character)
           return data
         end
       end
+    elsif character_hash = JSON.parse(RestClient.get(character_hash["next"]))
+      character_hash["results"].each do |characters|
+        if character == characters["name"].downcase
+          characters.each do |description, data|
+            if description == "films"
+              return data
+            end
+          end
+        end
+      end
     end
   end
   # iterate over the character hash to find the collection of `films` for the given
