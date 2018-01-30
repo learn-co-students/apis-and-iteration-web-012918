@@ -36,7 +36,6 @@ def get_character_movies_from_api(character)
     end
       #if character doesn't exist in hash - call counter method
     if character_films == []
-      binding.pry
       counter += 1
     else
       break
