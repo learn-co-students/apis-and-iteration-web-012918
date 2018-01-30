@@ -4,22 +4,19 @@ require 'pry'
 
 def get_character_movies_from_api(character)
   #make the web request
-  all_characters = RestClient.get('http://www.swapi.co/api/people/')
-  character_hash = JSON.parse(all_characters)
-  
-  # iterate over the character hash to find the collection of `films` for the given
-  #   `character`
-  # collect those film API urls, make a web request to each URL to get the info
-  #  for that film
-  # return value of this method should be collection of info about each film.
-  #  i.e. an array of hashes in which each hash reps a given film
-  # this collection will be the argument given to `parse_character_movies`
-  #  and that method will do some nice presentation stuff: puts out a list
-  #  of movies by title. play around with puts out other info about a given film.
+  found_character_films = get_characters_films('http://www.swapi.co/api/people/', character)
+
+  film_info = found_character_films.map do |url|
+    JSON.parse(RestClient.get(url))
+  end
+
+  film_info
 end
 
 def parse_character_movies(films_hash)
-  # some iteration magic and puts out the movies in a nice list
+  films_hash.each do |movie_hash|
+    puts movie_hash["title"]
+  end
 end
 
 def show_character_movies(character)
@@ -27,7 +24,45 @@ def show_character_movies(character)
   parse_character_movies(films_hash)
 end
 
-## BONUS
+def get_characters_films(url, character)
+  all_characters = RestClient.get(url)
+  character_hash = JSON.parse(all_characters)
 
-# that `get_character_movies_from_api` method is probably pretty long. Does it do more than one job?
-# can you split it up into helper methods?
+  found_character_films = "nobody"
+  character_hash["results"].each do |movie_character|
+        if movie_character["name"].downcase == character
+          found_character_films = movie_character["films"]
+        end
+  end
+  if found_character_films != "nobody"
+    found_character_films
+  else
+    get_characters_films(character_hash["next"], character)
+  end
+end
+
+def get_movie_info_from_api(movie)
+  all_movies = RestClient.get('https://swapi.co/api/films/')
+  movies_hash = JSON.parse(all_movies)
+
+  movies_hash["results"].each do |movie_info|
+    if movie_info["title"].downcase == movie
+      return movie_info
+    end
+  end
+
+  puts "That title doesn't exist"
+end
+
+def parse_movie_info(movie)
+  roman = ["I", "II", "III", "IV", "V", "VI"]
+
+  puts "Title: #{movie["title"]}, Episode #{ roman[ movie["episode_id"]-1 ] }"
+  puts ""
+  puts movie["opening_crawl"]
+end
+
+def show_movie_info(movie)
+  movie_hash = get_movie_info_from_api(movie)
+  parse_movie_info(movie_hash)
+end
