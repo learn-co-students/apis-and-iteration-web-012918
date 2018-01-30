@@ -40,3 +40,29 @@ def get_characters_films(url, character)
     get_characters_films(character_hash["next"], character)
   end
 end
+
+def get_movie_info_from_api(movie)
+  all_movies = RestClient.get('https://swapi.co/api/films/')
+  movies_hash = JSON.parse(all_movies)
+
+  movies_hash["results"].each do |movie_info|
+    if movie_info["title"].downcase == movie
+      return movie_info
+    end
+  end
+
+  puts "That title doesn't exist"
+end
+
+def parse_movie_info(movie)
+  roman = ["I", "II", "III", "IV", "V", "VI"]
+
+  puts "Title: #{movie["title"]}, Episode #{ roman[ movie["episode_id"]-1 ] }"
+  puts ""
+  puts movie["opening_crawl"]
+end
+
+def show_movie_info(movie)
+  movie_hash = get_movie_info_from_api(movie)
+  parse_movie_info(movie_hash)
+end
