@@ -19,7 +19,6 @@ require 'pry'
 #
 # end
 
-
 def get_character_movies_from_api(character)
   #make the web request
   counter = 1
