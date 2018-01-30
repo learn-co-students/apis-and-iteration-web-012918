@@ -3,28 +3,36 @@ require 'json'
 require 'pry'
 
 def get_character_movies_from_api(character)
-  #make the web request
-  all_characters = RestClient.get('http://www.swapi.co/api/people/')
-  character_hash = JSON.parse(all_characters)
+  # all_characters = RestClient.get('http://www.swapi.co/api/people/')
+  # character_hash = JSON.parse(all_characters)
+  # char_films=[]
+  # character_hash["results"].each{ |ind_char_hash|
+  #   if ind_char_hash["name"].downcase == character
+  #     char_films = ind_char_hash["films"]
+  #   end
+  # }
+  # get_films_from_api(char_films)
 
+
+  url = 'http://www.swapi.co/api/people/'
   char_films=[]
-  character_hash["results"].each{ |ind_char_hash|
-    if ind_char_hash["name"].downcase == character
-      char_films = ind_char_hash["films"]
+  arr = (1..88).to_a
+  arr.delete(17)
+  # arr = (1..16).to_a
+  arr.each{ |p|
+    page = url + p.to_s
+    all_characters = RestClient.get(page)
+    character_hash = JSON.parse(all_characters)
+    # binding.pry
+    if character_hash["name"].downcase == character
+      char_films = character_hash["films"]
+      break
     end
   }
-
   get_films_from_api(char_films)
 end
-  # iterate over the character hash to find the collection of `films` for the given
-  #   `character`string
-  # collect those film API urls, make a web request to each URL to get the info
-  #  for that film
-  # return value of this method should be collection of info about each film.
-  #  i.e. an array of hashes in which each hash reps a given film
-  # this collection will be the argument given to `parse_character_movies`
-  #  and that method will do some nice presentation stuff: puts out a list
-  #  of movies by title. play around with puts out other info about a given film.
+
+
 
 def get_films_from_api(char_films_array)
   char_films_array.map{ |url|
@@ -46,6 +54,41 @@ def show_character_movies(character)
 end
 
 ## BONUS
-
+# get char from all pages
 # that `get_character_movies_from_api` method is probably pretty long. Does it do more than one job?
 # can you split it up into helper methods?
+
+#
+#
+# def get_movie_chars_from_api(movie)
+#   all_movies = RestClient.get('http://www.swapi.co/api/films/')
+#   movie_hash = JSON.parse(all_movies)
+#   mov=[]
+#   movie_hash["results"].each{ |ind_mov_hash|
+#     if ind_mov_hash["title"].downcase == movie
+#       mov = ind_mov_hash["character"]
+#     end
+#   }
+#   get_chars_from_api(mov)
+# end
+#
+# def get_chars_from_api(char_chars_array)
+#   char_chars_array.map{ |url|
+#     one_char = RestClient.get(url)
+#     JSON.parse(one_char)
+#   }
+# end
+#
+# def parse_characters(chars_hash)
+#   chars_hash.each{ |hash_in_a|
+#     puts hash_in_a["name"]
+#   }
+#   # some iteration magic and puts out the movies in a nice list
+# end
+#
+# def show_characters_in_movie(character)
+#   char_hash = get_movie_chars_from_api(character)
+#   parse_characters(char_hash)
+# end
+
+# show_characters_in_movie("A New Hope")
