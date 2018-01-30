@@ -18,13 +18,17 @@ def get_character_movies_from_api(character)
   #  of movies by title. play around with puts out other info about a given film.
 end
 
-def get_data
-  all_characters = RestClient.get('http://www.swapi.co/api/people/')
-  JSON.parse(all_characters)
+def get_search_term(character)
+  character.split.join("&")
+end
+
+def get_data(character)
+  char = RestClient.get("http://www.swapi.co/api/people/?search=#{get_search_term(character)}")
+  JSON.parse(char)
 end
 
 def get_character_hash(character)
-  characters_hash = get_data
+  characters_hash = get_data(character)
   characters_hash["results"].each do |characters|
     if characters["name"].downcase == character
       return characters
