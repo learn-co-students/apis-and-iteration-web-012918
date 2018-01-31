@@ -18,12 +18,10 @@ def get_character_movies_from_api(character)
   char_films=[]
   arr = (1..88).to_a
   arr.delete(17)
-  # arr = (1..16).to_a
   arr.each{ |p|
     page = url + p.to_s
     all_characters = RestClient.get(page)
     character_hash = JSON.parse(all_characters)
-    # binding.pry
     if character_hash["name"].downcase == character
       char_films = character_hash["films"]
       break
@@ -32,7 +30,7 @@ def get_character_movies_from_api(character)
   get_films_from_api(char_films)
 end
 
-
+# binding.pry
 
 def get_films_from_api(char_films_array)
   char_films_array.map{ |url|
